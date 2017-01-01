@@ -1,19 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import App from '../components/app'
 import * as AppActions from '../actions/app-actions';
 
 class AppContainer extends React.Component {
     render() {
         return (
-            <div>Application</div>
+            <App />
         );
     }
 };
  
 function mapStateToProps(state, props) {
-    return {
-    };
+    return props;
 };
 
  function mapDispatchToProps(dispatch) {
