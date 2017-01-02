@@ -5,8 +5,7 @@ class App extends React.Component {
   render() {
     return(
       <div className='app'>
-        <AppBar title="DLDiag"
-        iconClassNameRight="muidocs-icon-navigation-expand-more" />
+        <AppBar title="DLDiag" />
        テスト
       </div>
     );
