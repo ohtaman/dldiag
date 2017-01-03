@@ -1,8 +1,10 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
+import Paper from 'material-ui/Paper';
 
 import './app.css';
 import ToolBar from './tool-bar';
+import Diagram from './diagram';
 
 
 class App extends React.Component {
@@ -10,8 +12,12 @@ class App extends React.Component {
     return (
       <div className="app">
         <AppBar title="DLDiag" />
-        <ToolBar />
-        <div className="contents" >コンテンツ</div>
+        <Paper className="tool-bar">
+          <ToolBar />
+        </Paper>
+        <Paper className="contents">
+          <Diagram />
+        </Paper>
       </div>
     );
   }

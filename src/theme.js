@@ -12,7 +12,7 @@ export default {
         accent3Color: '#E6B422',
         textColor: '#17184B',
         alternateTextColor: '#FCFCFC',
-        canvasColor: '#F3F3F3',
+        canvasColor: '#FCFCFC',
         borderColor: '#0C1312',
         disabledColor: fade(Colors.darkBlack, 0.3),
         pickerHeaderColor: Colors.darkBlack,

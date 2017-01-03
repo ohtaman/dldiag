@@ -1,17 +1,16 @@
-import React from 'react'
-
-import './tool-bar.css';
-import {Card, Menu, MenuItem} from 'material-ui';
+import React from 'react';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 
 class ToolBar extends React.Component {
   render() {
     return (
-      <Card className="tool-bar">
+      <div>
         <Menu>
           <MenuItem primaryText="Nodes" />
           <MenuItem primaryText="Connectors" />
         </Menu>
-      </Card>
+      </div>
     );
   }
 };
