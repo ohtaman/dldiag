@@ -6,6 +6,8 @@ import * as Utils from '../utils';
 
 class Node extends React.Component {
     componentDidMount() {
+        let thisNode = this;
+        
         let elem = this.refs['elem'];
         d3.select(elem).call(d3.drag().on('drag', () => {
             this.props.onDrag(d3.event);
@@ -14,7 +16,7 @@ class Node extends React.Component {
         }));
         d3.select(elem).selectAll('.output').call(d3.drag().on('drag', function() {
             let n = Number(this.getAttribute('name'));
-            this.props.onDragOutputConnector(d3.event, n);
+            thisNode.props.onDragOutputConnector(d3.event, n);
         }));
     }
 
