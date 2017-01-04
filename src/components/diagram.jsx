@@ -1,37 +1,58 @@
 import React from 'react';
-import * as d3 from 'd3';
+
+import Node from './node';
 
 class Diagram extends React.Component {
-    componentDidMount() {
-        this.svg = d3.select(this.refs['svg']);
-
-        this.svg.selectAll('g.node').data(
-            Object.values(this.props.nodes)
-        ).enter().append('g')
-            .attr('class', 'node')
-            .attr('transform', (d) => {
-                return `translate(${d.x},${d.y})`;
-            });
-
-        this.svg.selectAll('g.node')
-            .append('rect')
-            .attr('x', 3)
-            .attr('y', 3)
-            .attr('rx', 10)
-            .attr('ry', 10)
-            .attr('stroke', '#935F69')
-            .attr('stroke-width', 5)
-            .attr('height', 60)
-            .attr('width', 200)
-            .attr('fill', 'none');
+    constructor(props) {
+        super(props);
+        this.state = props;
     }
 
     render() {
+        let nodes = Object.keys(this.state.nodes).map((key) => {
+            let node = this.state.nodes[key];
+            return (
+                <Node key={key}
+                    x={node.x}
+                    y={node.y}
+                    text={node.text}
+                    inputs={node.inputs}
+                    outputs={node.outputs}
+                    onDrag={(e) => {
+                        this.onDragNode(e, key);
+                    }}
+                    onDragEnd={(e) => {
+                        this.onDragNodeEnd(e, key);
+                    }}
+                    onDragOutputConnector={(e, n) => {
+                        // TODO: implement add line.
+                    }}
+                />
+            );
+        });
+
         return (
             <div>
-                <svg ref="svg" width="100%" height="100%" />
+                <svg ref="svg" width="100%" height="100%">
+                    {nodes}
+                </svg>
             </div>
         );
+    }
+
+    onDragNode (e, key) {
+        let nodes = Object.assign({}, this.state.nodes);
+        nodes[key].x += e.dx;
+        nodes[key].y += e.dy;
+        this.setState({
+            nodes: nodes
+        });
+    }
+
+    onDragNodeEnd (e, key) {
+        let orig = this.props.nodes[key];
+        let moved = this.state.nodes[key];
+        this.props.onNodeMoved(orig, moved);
     }
 };
 
@@ -39,16 +60,23 @@ Diagram.defaultProps = {
     nodes: {
         node1: {
             x: 10,
-            y: 20
+            y: 20,
+            text: 'Node1',
+            inputs: 1,
+            outputs: 2
         },
         node2: {
             x: 300,
-            y: 60
+            y: 60,
+            text: 'Node2',
+            inputs: 2,
+            outputs: 1
         }
     },
     edges: [
         ['node1', 'node2']
     ],
+    onNodeMoved: () => {}
 }
 
 export default Diagram;
