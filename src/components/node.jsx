@@ -7,7 +7,7 @@ import * as Utils from '../utils';
 class Node extends React.Component {
     componentDidMount() {
         let thisNode = this;
-        
+
         let elem = this.refs['elem'];
         d3.select(elem).call(d3.drag().on('drag', () => {
             this.props.onDrag(d3.event);
@@ -17,7 +17,11 @@ class Node extends React.Component {
         d3.select(elem).selectAll('.output').call(d3.drag().on('drag', function() {
             let n = Number(this.getAttribute('name'));
             thisNode.props.onDragOutputConnector(d3.event, n);
+        }).on('end', function() {
+            let n = Number(this.getAttribute('name'));
+            thisNode.props.onDragOutputConnectorEnd(d3.event, n);
         }));
+        window.node = this;
     }
 
     render() {
@@ -48,7 +52,7 @@ class Node extends React.Component {
                     r={this.props.connectorSize}
                     fill={this.props.outputConnectorColor}
                     strokeWidth={this.props.connectorPeripheralSize}
-                    stroke="rgba(0, 0, 0, 0)"
+                    stroke="rgba(0, 0, 0, 0)" // To keep periphral area.
                 />
             );
         });
@@ -98,7 +102,21 @@ Node.defaultProps = {
     inputConnectorColor: 'red',
     outputConnectorColor: 'green',
     onDrag: () => {},
-    onDragEnd: () => {}
+    onDragEnd: () => {},
+    onDragOutputConnector: () => {},
+    onDragOutputConnectorEnd: () => {}
 }
 
 export default Node;
+
+export function getConnectorPosition(node, type, n) {
+    let x = node.props.x;
+    let y = node.props.y;
+    if (type === "input") {
+        x += node.props.width*(n + 1)/(node.props.inputs + 1);
+    } else if (type === "output") {
+        x += node.props.width*(n + 1)/(node.props.outputs + 1);
+        y += node.props.height;
+    }
+    return [x, y];
+};

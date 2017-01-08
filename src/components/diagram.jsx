@@ -1,6 +1,8 @@
 import React from 'react';
 
 import Node from './node';
+import {getConnectorPosition} from './node';
+import Edge from './edge';
 
 class Diagram extends React.Component {
     constructor(props) {
@@ -12,7 +14,8 @@ class Diagram extends React.Component {
         let nodes = Object.keys(this.state.nodes).map((key) => {
             let node = this.state.nodes[key];
             return (
-                <Node key={key}
+                <Node
+                    key={key}
                     x={node.x}
                     y={node.y}
                     text={node.text}
@@ -25,16 +28,27 @@ class Diagram extends React.Component {
                         this.onDragNodeEnd(e, key);
                     }}
                     onDragOutputConnector={(e, n) => {
-                        // TODO: implement add line.
+                        this.onDragOutputConnector(e, key, n);
                     }}
                 />
             );
+        });
+
+        let edges = this.props.edges.map((edge) => {
+            let fromKey = edge.from[0];
+            let toKey = edge.to[0];
+            let fromNode = nodes.find(_ => _.key === fromKey);
+            let toNode = nodes.find(_ => _.key === toKey);
+            let from = getConnectorPosition(fromNode, 'output', edge.from[1]);
+            let to = getConnectorPosition(toNode, 'input', edge.to[1]);
+            return <Edge key={edge} from={from} to={to} />
         });
 
         return (
             <div>
                 <svg ref="svg" width="100%" height="100%">
                     {nodes}
+                    {edges}
                 </svg>
             </div>
         );
@@ -44,6 +58,13 @@ class Diagram extends React.Component {
         let nodes = Object.assign({}, this.state.nodes);
         nodes[key].x += e.dx;
         nodes[key].y += e.dy;
+        this.setState({
+            nodes: nodes
+        });
+    }
+
+    onDragOutputConnector (e, key, n) {
+        let nodes = Object.assign({}, this.state.nodes);
         this.setState({
             nodes: nodes
         });
@@ -73,9 +94,10 @@ Diagram.defaultProps = {
             outputs: 1
         }
     },
-    edges: [
-        ['node1', 'node2']
-    ],
+    edges: [{
+        from: ['node1', 0],
+        to: ['node2', 1]
+    }],
     onNodeMoved: () => {}
 }
 
